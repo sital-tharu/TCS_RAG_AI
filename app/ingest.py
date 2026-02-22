@@ -8,8 +8,9 @@ from langchain_chroma import Chroma
 
 # Config
 EMBEDDING_MODEL = "mxbai-embed-large:latest"
-PDF_DIR = "data"
-DB_PATH = "./chroma_db"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # project root (TCS_RAG/)
+PDF_DIR = os.path.join(BASE_DIR, "data")
+DB_PATH = os.path.join(BASE_DIR, "chroma_db")
 
 def ingest_pdfs():
     # Ensure data directory exists
