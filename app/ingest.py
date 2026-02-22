@@ -49,8 +49,8 @@ def ingest_pdfs():
             # 2. Financial-Optimized Chunking
             # We use a larger chunk size to keep financial tables together
             splitter = RecursiveCharacterTextSplitter(
-                chunk_size=1200,    # Large enough for tables
-                chunk_overlap=200,   # Keep context between chunks
+                chunk_size=2000,    # Large enough for financial tables
+                chunk_overlap=300,   # Keep context between chunks
                 separators=["\n\n", "\n", " ", ""]
             )
             
@@ -72,7 +72,16 @@ def ingest_pdfs():
     
     # 4. Vector Store Creation (Local Embeddings)
     print(f"🧠 Generating embeddings using {EMBEDDING_MODEL}...")
-    embeddings = OllamaEmbeddings(model=EMBEDDING_MODEL)
+    try:
+        embeddings = OllamaEmbeddings(model=EMBEDDING_MODEL)
+        # Quick test to fail fast if Ollama is not reachable
+        embeddings.embed_query("test")
+    except Exception as e:
+        print(f"❌ Ollama error: {e}")
+        print(f"   Make sure Ollama is running and the model is pulled:")
+        print(f"   → ollama serve")
+        print(f"   → ollama pull {EMBEDDING_MODEL}")
+        return
     
     # Chroma v0.6+ handles persistence automatically
     vectorstore = Chroma.from_documents(
