@@ -1,6 +1,7 @@
 """Index TCS financial PDFs into ChromaDB"""
 
 import os
+import shutil
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
@@ -17,6 +18,11 @@ def ingest_pdfs():
     if not os.path.exists(PDF_DIR):
         print(f"❌ Error: Create a '{PDF_DIR}' folder and put your TCS PDFs there.")
         return
+
+    # Clear old vector store to prevent duplicates on re-run
+    if os.path.exists(DB_PATH):
+        shutil.rmtree(DB_PATH)
+        print("🗑️ Cleared old vector store.")
 
     all_filtered_chunks = []
 
