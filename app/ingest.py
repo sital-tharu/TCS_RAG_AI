@@ -18,3 +18,12 @@ def ingest_pdfs():
         return
 
     all_filtered_chunks = []
+
+# 1. Page Selection Logic (Based on your Index)
+    # We target: Performance (8-16), Statutory (39-127), and Consolidated (319-323)
+    # Note: Python slices are 0-indexed, so Page 8 is index 7.
+    target_pages = (
+        list(range(7, 16)) +    # Performance Review
+        list(range(38, 127)) +  # Statutory Section
+        list(range(318, 323))   # Consolidated Financials
+    )
