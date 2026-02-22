@@ -47,10 +47,10 @@ def ingest_pdfs():
             important_docs = [full_doc[i] for i in target_pages if i < len(full_doc)]
 
             # 2. Financial-Optimized Chunking
-            # We use a larger chunk size to keep financial tables together
+            # chunk_size must stay under ~1000 chars to fit embedding model's 512-token limit
             splitter = RecursiveCharacterTextSplitter(
-                chunk_size=2000,    # Large enough for financial tables
-                chunk_overlap=300,   # Keep context between chunks
+                chunk_size=1000,
+                chunk_overlap=200,
                 separators=["\n\n", "\n", " ", ""]
             )
             
@@ -76,19 +76,19 @@ def ingest_pdfs():
         embeddings = OllamaEmbeddings(model=EMBEDDING_MODEL)
         # Quick test to fail fast if Ollama is not reachable
         embeddings.embed_query("test")
+
+        # Chroma v0.6+ handles persistence automatically
+        vectorstore = Chroma.from_documents(
+            documents=all_filtered_chunks,
+            embedding=embeddings,
+            persist_directory=DB_PATH
+        )
     except Exception as e:
-        print(f"❌ Ollama error: {e}")
+        print(f"❌ Embedding/indexing error: {e}")
         print(f"   Make sure Ollama is running and the model is pulled:")
         print(f"   → ollama serve")
         print(f"   → ollama pull {EMBEDDING_MODEL}")
         return
-    
-    # Chroma v0.6+ handles persistence automatically
-    vectorstore = Chroma.from_documents(
-        documents=all_filtered_chunks,
-        embedding=embeddings,
-        persist_directory=DB_PATH
-    )
     
     print(f"✅ Success! Indexed {len(all_filtered_chunks)} chunks into {DB_PATH}")
 
