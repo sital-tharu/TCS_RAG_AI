@@ -27,3 +27,24 @@ def ingest_pdfs():
         list(range(38, 127)) +  # Statutory Section
         list(range(318, 323))   # Consolidated Financials
     )
+for pdf_file in os.listdir(PDF_DIR):
+        if pdf_file.endswith('.pdf'):
+            file_path = os.path.join(PDF_DIR, pdf_file)
+            print(f"📂 Loading: {pdf_file}")
+            
+            # Using PyMuPDF for speed and better metadata
+            loader = PyMuPDFLoader(file_path)
+            full_doc = loader.load()
+            
+            # Filter only the important pages
+            important_docs = [full_doc[i] for i in target_pages if i < len(full_doc)]
+
+            # 2. Financial-Optimized Chunking
+            # We use a larger chunk size to keep financial tables together
+            splitter = RecursiveCharacterTextSplitter(
+                chunk_size=1200,    # Large enough for tables
+                chunk_overlap=200,   # Keep context between chunks
+                separators=["\n\n", "\n", " ", ""]
+            )
+            
+            chunks = splitter.split_documents(important_docs)
