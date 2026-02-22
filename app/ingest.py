@@ -27,7 +27,7 @@ def ingest_pdfs():
         list(range(38, 127)) +  # Statutory Section
         list(range(318, 323))   # Consolidated Financials
     )
-for pdf_file in os.listdir(PDF_DIR):
+    for pdf_file in os.listdir(PDF_DIR):
         if pdf_file.endswith('.pdf'):
             file_path = os.path.join(PDF_DIR, pdf_file)
             print(f"📂 Loading: {pdf_file}")
@@ -48,3 +48,33 @@ for pdf_file in os.listdir(PDF_DIR):
             )
             
             chunks = splitter.split_documents(important_docs)
+
+            # 3. Enhanced Metadata
+            for chunk in chunks:
+                chunk.metadata.update({
+                    "source": pdf_file,
+                    "page": chunk.metadata.get("page", 0) + 1, # Human-readable page #
+                    "category": "Financial/Statutory"
+                })
+            
+            all_filtered_chunks.extend(chunks)
+
+    if not all_filtered_chunks:
+        print("⚠️ No relevant chunks found. Check your PDF page ranges.")
+        return
+    
+    # 4. Vector Store Creation (Local Embeddings)
+    print(f"🧠 Generating embeddings using {EMBEDDING_MODEL}...")
+    embeddings = OllamaEmbeddings(model=EMBEDDING_MODEL)
+    
+    # Chroma v0.6+ handles persistence automatically
+    vectorstore = Chroma.from_documents(
+        documents=all_filtered_chunks,
+        embedding=embeddings,
+        persist_directory=DB_PATH
+    )
+    
+    print(f"✅ Success! Indexed {len(all_filtered_chunks)} chunks into {DB_PATH}")
+
+if __name__ == "__main__":
+    ingest_pdfs()
