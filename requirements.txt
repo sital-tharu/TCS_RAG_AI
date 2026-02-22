@@ -1,0 +1,21 @@
+# Core API Server
+fastapi>=0.118.0
+uvicorn[standard]>=0.35.0
+python-multipart>=0.0.20
+
+# LangChain Ecosystem (v0.4.x is now standard)
+langchain>=0.4.0
+langchain-community>=0.4.0
+langchain-ollama>=0.3.0
+
+# Vector Database (Major speed improvements in v0.6+)
+chromadb>=0.6.2
+
+# Data Processing
+pypdf>=5.3.0
+pymupdf>=1.25.0
+tabula-py>=2.10.0
+pandas>=2.3.0
+
+# Hidden but necessary for Tabula/Java
+jpype1>=1.5.0
