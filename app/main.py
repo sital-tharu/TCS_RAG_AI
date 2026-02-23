@@ -37,9 +37,5 @@ async def query_tcs(request: QueryRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/docs")
-async def docs_redirect():
-    return {"message": "Visit /docs for Swagger UI"}
-
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
