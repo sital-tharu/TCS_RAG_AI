@@ -1,7 +1,14 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 import uvicorn
+
+# Load config from .env
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+CHAT_MODEL = os.getenv("CHAT_MODEL", "llama3.1:8b")
 
 try:
     from .rag import TCSRAG       # works with: python -m app.main
@@ -19,7 +26,7 @@ class QueryRequest(BaseModel):
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "model": "llama3.1:8b"}
+    return {"status": "healthy", "model": CHAT_MODEL}
 
 @app.post("/query")
 async def query_tcs(request: QueryRequest):
