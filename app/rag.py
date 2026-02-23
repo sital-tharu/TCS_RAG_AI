@@ -41,7 +41,14 @@ class TCSRAG:
         self.llm = ChatOllama(model=CHAT_MODEL, temperature=0.1)
         
         self.prompt = ChatPromptTemplate.from_template("""
-        You are a TCS financial analyst. Answer using ONLY provided data.
+        You are a TCS financial analyst. Answer using ONLY the provided context data.
+        
+        Rules:
+        - If the answer is NOT in the context, say "Cannot determine from available data"
+        - Do NOT guess, estimate, or infer beyond what the data shows
+        - Include exact values with their time period (e.g., FY2025)
+        - Cite source page numbers for every factual claim
+        - For calculations, show your work using only retrieved data
         
         CONTEXT: {context}
         QUESTION: {question}
