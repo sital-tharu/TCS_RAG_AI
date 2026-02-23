@@ -57,7 +57,9 @@ class TCSRAG:
         """)
         
         self.rag_chain = (
-            {"context": self.retriever | (lambda docs: "\n\n".join(d.page_content for d in docs)), 
+            {"context": self.retriever | (lambda docs: "\n\n".join(
+                f"[Page {d.metadata.get('page', '?')} | {d.metadata.get('source', '?')}]\n{d.page_content}" for d in docs
+            )), 
              "question": RunnablePassthrough()}
             | self.prompt
             | self.llm
