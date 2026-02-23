@@ -1,3 +1,4 @@
+import os
 from langchain_chroma import Chroma
 from langchain_ollama import OllamaEmbeddings, ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
@@ -6,7 +7,8 @@ from langchain_core.runnables import RunnablePassthrough
 
 EMBEDDING_MODEL = "mxbai-embed-large:latest"
 CHAT_MODEL = "llama3.1:8b"
-DB_PATH = "../chroma_db"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # project root (TCS_RAG/)
+DB_PATH = os.path.join(BASE_DIR, "chroma_db")
 
 class TCSRAG:
     def __init__(self):
