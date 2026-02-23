@@ -1,13 +1,17 @@
 import os
+from dotenv import load_dotenv
 from langchain_chroma import Chroma
 from langchain_ollama import OllamaEmbeddings, ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
-EMBEDDING_MODEL = "mxbai-embed-large:latest"
-CHAT_MODEL = "llama3.1:8b"
+# Config — loaded from .env (single source of truth for model names)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # project root (TCS_RAG/)
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "mxbai-embed-large:latest")
+CHAT_MODEL = os.getenv("CHAT_MODEL", "llama3.1:8b")
 DB_PATH = os.path.join(BASE_DIR, "chroma_db")
 
 class TCSRAG:

@@ -2,6 +2,7 @@
 fastapi>=0.118.0
 uvicorn[standard]>=0.35.0
 python-multipart>=0.0.20
+python-dotenv>=1.0.0
 
 # LangChain Ecosystem (v0.4.x is now standard)
 langchain>=0.4.0

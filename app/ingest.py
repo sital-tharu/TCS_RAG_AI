@@ -2,14 +2,17 @@
 
 import os
 import shutil
+from dotenv import load_dotenv
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
 
-# Config
-EMBEDDING_MODEL = "mxbai-embed-large:latest"
+# Config — loaded from .env (single source of truth for model names)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # project root (TCS_RAG/)
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "mxbai-embed-large:latest")
 PDF_DIR = os.path.join(BASE_DIR, "data")
 DB_PATH = os.path.join(BASE_DIR, "chroma_db")
 
