@@ -2,7 +2,6 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import Optional
 import uvicorn
 
 # Load config from .env
@@ -22,7 +21,6 @@ rag = TCSRAG()
 
 class QueryRequest(BaseModel):
     question: str
-    max_tokens: Optional[int] = 500
 
 @app.get("/health")
 async def health_check():
@@ -34,8 +32,7 @@ async def query_tcs(request: QueryRequest):
         response = rag.query(request.question)
         return {
             "question": request.question,
-            "answer": response,
-            "tokens": request.max_tokens
+            "answer": response
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
