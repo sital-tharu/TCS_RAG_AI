@@ -1,0 +1,32 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.log
+
+# --- Virtual environments ---
+venv/
+.env
+*.env
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Project-specific ---
+# ChromaDB vector store (generated, can be rebuilt)
+chroma_db/
+
+# Ollama cache/models (large binaries, not needed in repo)
+ollama/
+
+# --- Example env file (keep this for sharing config) ---
+!.env.example
