@@ -7,7 +7,13 @@ import uvicorn
 # Load config from .env
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
-CHAT_MODEL = os.getenv("CHAT_MODEL", "llama3.1:8b")
+CHAT_MODEL = os.getenv("CHAT_MODEL")
+
+if not CHAT_MODEL:
+    raise RuntimeError(
+        "❌ Missing CHAT_MODEL in .env file.\n"
+        "   Add: CHAT_MODEL=llama3.1:8b"
+    )
 
 try:
     from .rag import TCSRAG       # works with: python -m app.main

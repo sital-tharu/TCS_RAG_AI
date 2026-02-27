@@ -12,7 +12,13 @@ from langchain_chroma import Chroma
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # project root (TCS_RAG/)
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "mxbai-embed-large:latest")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL")
+
+if not EMBEDDING_MODEL:
+    raise RuntimeError(
+        "❌ Missing EMBEDDING_MODEL in .env file.\n"
+        "   Add: EMBEDDING_MODEL=mxbai-embed-large:latest"
+    )
 PDF_DIR = os.path.join(BASE_DIR, "data")
 DB_PATH = os.path.join(BASE_DIR, "chroma_db")
 

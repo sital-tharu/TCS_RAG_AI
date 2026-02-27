@@ -10,8 +10,16 @@ from langchain_core.runnables import RunnablePassthrough
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # project root (TCS_RAG/)
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "mxbai-embed-large:latest")
-CHAT_MODEL = os.getenv("CHAT_MODEL", "llama3.1:8b")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL")
+CHAT_MODEL = os.getenv("CHAT_MODEL")
+
+if not EMBEDDING_MODEL or not CHAT_MODEL:
+    raise RuntimeError(
+        "❌ Missing config in .env file.\n"
+        "   Make sure .env exists with:\n"
+        "   EMBEDDING_MODEL=mxbai-embed-large:latest\n"
+        "   CHAT_MODEL=llama3.1:8b"
+    )
 DB_PATH = os.path.join(BASE_DIR, "chroma_db")
 
 class TCSRAG:
